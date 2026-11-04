@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="ea_desk.ExecutiveSummary">
+        <div class="o_action o_ea_exec h-100 overflow-auto">
+            <t t-if="state.data">
+            <t t-set="d" t-value="state.data"/>
+            <div class="container-fluid py-3 px-4">
+                <div class="ea-head">
+                    <div>
+                        <h1>Ringkasan Eksekutif</h1>
+                        <p>Pekerjaan fungsi EA yang sedang berjalan, yang butuh keputusan, dan dampak yang sudah dihasilkan.</p>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="ea-sub">Diperbarui <t t-esc="state.updated"/></span>
+                        <button class="btn btn-secondary btn-sm" t-on-click="refresh"><i class="fa fa-refresh me-1"/>Muat ulang</button>
+                    </div>
+                </div>
+
+                <!-- KPI tiles -->
+                <div class="row g-3 mb-3">
+                    <div class="col-6 col-md-4 col-xl-2">
+                        <div class="ea-tile" t-on-click="() => this.openTile('active')">
+                            <b t-esc="d.kpi.active"/><span>Engagement aktif</span>
+                            <em t-if="d.kpi.on_hold"><t t-esc="d.kpi.on_hold"/> ditunda</em>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4 col-xl-2">
+                        <div t-att-class="'ea-tile' + (d.kpi.ready ? ' accent' : '')" t-on-click="() => this.openTile('ready')">
+                            <b t-esc="d.kpi.ready"/><span>Siap lewat gerbang</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4 col-xl-2">
+                        <div t-att-class="'ea-tile' + (d.kpi.attention ? ' accent' : '')" t-on-click="() => this.openTile('attention')">
+                            <b t-esc="d.kpi.attention"/><span>Perlu perhatian</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4 col-xl-2">
+                        <div t-att-class="'ea-tile' + (d.kpi.adr_waiting_long ? ' accent' : '')" t-on-click="() => this.openTile('adr')">
+                            <b t-esc="d.kpi.adr_proposed"/><span>ADR menunggu keputusan</span>
+                            <em t-if="d.kpi.adr_waiting_long"><t t-esc="d.kpi.adr_waiting_long"/> lebih dari 7 hari</em>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4 col-xl-2">
+                        <div class="ea-tile" t-on-click="() => this.openTile('artifact')">
+                            <b t-esc="d.kpi.artifact_draft"/><span>Artefak masih Draft</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4 col-xl-2">
+                        <div class="ea-tile" t-on-click="() => this.openTile('foundation')">
+                            <b t-esc="d.kpi.foundation_open"/><span>Masukan /foundation terbuka</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pipeline & capacity -->
+                <div class="row g-3 mb-3">
+                    <div class="col-lg-7">
+                        <div class="ea-card">
+                            <h2>Pipeline Planting Seed <small>engagement berjalan per tahap · klik batang untuk membuka</small></h2>
+                            <div class="ea-chart"><canvas t-ref="pipeline" role="img" aria-label="Jumlah engagement berjalan per tahap Planting Seed"/></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="ea-card">
+                            <h2>Kapasitas EA <small><t t-esc="d.capacity.total"/> / <t t-esc="d.capacity.limit"/> poin</small></h2>
+                            <div t-att-class="'ea-meter' + (d.capacity.total &gt; d.capacity.limit ? ' over' : '')"><i t-att-style="'width:' + capacityPct + '%'"/></div>
+                            <div class="ea-sub mb-2">
+                                <t t-if="d.capacity.total &gt; d.capacity.limit"><b class="text-warning-emphasis">Melebihi batas.</b> Pertimbangkan menurunkan mode (Co-Pilot → Advisor) atau menunda engagement tanpa sponsor aktif.</t>
+                                <t t-else="">Bobot per mode: Co-Pilot 3, Advisor 2, Gatekeeper 1, Curator 1.</t>
+                            </div>
+                            <div class="ea-chart" style="height: 170px"><canvas t-ref="capacity" role="img" aria-label="Beban kapasitas EA per mode"/></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Attention & impact -->
+                <div class="row g-3 mb-3">
+                    <div class="col-lg-5">
+                        <div class="ea-card">
+                            <h2>Perlu perhatian <span class="ea-pill accent" t-if="d.attention.length" t-esc="d.attention.length"/></h2>
+                            <ul class="ea-list" t-if="d.attention.length">
+                                <li t-foreach="d.attention" t-as="a" t-key="a.kind + a.code" t-on-click="() => this.openAttention(a)">
+                                    <span t-att-class="'ea-dot ' + a.kind"/>
+                                    <div><div class="ea-t"><span class="ea-mono me-1" t-esc="a.code"/><t t-esc="a.name"/></div><div class="ea-sub" t-esc="a.text"/></div>
+                                </li>
+                            </ul>
+                            <div class="ea-empty" t-else="">Tidak ada yang menunggu. Semua engagement berjalan sesuai gerbangnya.</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="ea-card">
+                            <h2>Jejak dampak <small>6 bulan terakhir</small></h2>
+                            <div class="ea-chart" style="height: 200px"><canvas t-ref="trend" role="img" aria-label="Gerbang dilewati, ADR disahkan, dan engagement selesai per bulan"/></div>
+                            <div class="ea-strip" aria-label="Ringkasan 90 hari terakhir">
+                                <div><b t-esc="d.impact_90.gates"/><span>Gerbang dilewati</span></div>
+                                <div><b t-esc="d.impact_90.adr_accepted"/><span>ADR disahkan</span></div>
+                                <div><b t-esc="d.impact_90.closed"/><span>Engagement di-harvest</span></div>
+                                <div><b t-esc="d.impact_90.artifacts"/><span>Artefak bertuan</span></div>
+                                <div><b t-esc="d.impact_90.foundation_done"/><span>Perbaikan /foundation</span></div>
+                            </div>
+                            <div class="ea-sub mt-1">Angka kotak = 90 hari terakhir.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Running engagements & ADR -->
+                <div class="row g-3 mb-3">
+                    <div class="col-lg-8">
+                        <div class="ea-card">
+                            <h2>Pekerjaan EA berjalan <small><t t-esc="d.engagements.length"/> engagement</small></h2>
+                            <div class="table-responsive" t-if="d.engagements.length">
+                                <table class="ea-table">
+                                    <thead><tr><th>Engagement</th><th>Produk</th><th>Mode</th><th>Tahap</th><th>Kriteria gerbang</th><th>Sponsor</th><th>Target</th></tr></thead>
+                                    <tbody>
+                                        <tr class="ea-row" t-foreach="d.engagements" t-as="e" t-key="e.id" t-on-click="() => this.openRecord('ea.engagement', e.id)">
+                                            <td><div class="ea-mono" t-esc="e.code"/><div class="ea-t" t-esc="e.name"/></td>
+                                            <td class="ea-sub" t-esc="e.product"/>
+                                            <td><span class="ea-pill muted" t-esc="e.mode"/></td>
+                                            <td>
+                                                <span class="ea-mono" t-esc="e.stage"/>
+                                                <span class="ea-pill accent ms-1" t-if="e.ready">Siap gerbang</span>
+                                                <span class="ea-pill muted ms-1" t-if="e.state == 'on_hold'">Ditunda</span>
+                                            </td>
+                                            <td><div class="ea-bar"><i t-att-style="'width:' + e.progress + '%'"/></div><span class="ea-sub"><t t-esc="e.progress"/>%</span></td>
+                                            <td class="ea-sub" t-esc="e.sponsor"/>
+                                            <td class="ea-sub" t-esc="e.target or '—'"/>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="ea-empty" t-else="">Belum ada engagement berjalan.</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="ea-card">
+                            <h2>ADR menunggu keputusan <span class="ea-pill" t-esc="d.kpi.adr_proposed"/></h2>
+                            <ul class="ea-list" t-if="d.decisions.length">
+                                <li t-foreach="d.decisions" t-as="x" t-key="x.id" t-on-click="() => this.openRecord('ea.decision', x.id)">
+                                    <div><div class="ea-t"><span class="ea-mono me-1" t-esc="x.code"/><t t-esc="x.name"/></div>
+                                        <div class="ea-sub"><t t-esc="x.engagement"/> · diusulkan <t t-esc="x.age"/> hari lalu</div></div>
+                                </li>
+                            </ul>
+                            <div class="ea-empty" t-else="">Tidak ada ADR yang menunggu.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products & activity -->
+                <div class="row g-3">
+                    <div class="col-lg-5">
+                        <div class="ea-card">
+                            <h2>Produk EA <small>kematangan &amp; pemakaian</small></h2>
+                            <ul class="ea-list">
+                                <li t-foreach="d.products" t-as="p" t-key="p.id" t-on-click="() => this.openRecord('ea.product', p.id)">
+                                    <div class="flex-grow-1"><div class="ea-t" t-esc="p.name"/>
+                                        <div class="ea-sub"><t t-esc="p.running"/> engagement berjalan<t t-if="p.open_feedback"> · <t t-esc="p.open_feedback"/> masukan terbuka</t></div></div>
+                                    <span t-att-class="'ea-pill ' + (p.maturity_key == 'draft' ? 'accent' : '')"><t t-esc="p.maturity"/> v<t t-esc="p.version"/></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="ea-card">
+                            <h2>Aktivitas terbaru</h2>
+                            <ul class="ea-list" t-if="d.recent.length">
+                                <li t-foreach="d.recent" t-as="m" t-key="m_index" t-on-click="() => this.openRecord(m.model, m.res_id)">
+                                    <span class="ea-mono" style="min-width: 78px" t-esc="m.date"/>
+                                    <div><div class="ea-t" t-esc="m.record"/><div class="ea-sub" t-esc="m.text"/></div>
+                                </li>
+                            </ul>
+                            <div class="ea-empty" t-else="">Belum ada aktivitas.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </t>
+        </div>
+    </t>
+</templates>

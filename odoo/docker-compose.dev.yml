@@ -1,0 +1,24 @@
+# EA Desk — DEVELOPMENT / TEST. Runs the working-tree code (./addons) against the
+# production database *server* but only on the ea_test database (tools/test.sh)
+# or for review on port 8070. It has no db service and never touches the
+# production containers.
+name: ea-desk-dev
+services:
+  odoo:
+    image: odoo:18.0
+    ports:
+      - "127.0.0.1:8070:8069"   # review only
+    volumes:
+      - ./addons:/mnt/extra-addons
+      - /home/clouduser/.config/ea-desk/odoo/odoo.conf:/etc/odoo/odoo.conf:ro
+      - ea-dev-filestore:/var/lib/odoo
+    command: ["odoo", "-d", "ea_test", "--db-filter=^ea_test$"]
+    networks: [prod]
+
+networks:
+  prod:
+    name: ea-desk_default
+    external: true
+
+volumes:
+  ea-dev-filestore:

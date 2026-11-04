@@ -1,0 +1,32 @@
+# EA Desk — PRODUCTION (Odoo 18 Community + PostgreSQL 16).
+# Code is mounted from the release worktree (~/Projects/ea-desk-release), never
+# from the development working tree, so unreviewed changes cannot reach production
+# even if this file is run from another checkout. Promote with tools/release.sh.
+# Config & passwords live outside git in ~/.config/ea-desk/odoo (0700).
+name: ea-desk
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: odoo
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD_FILE: /run/ea/db_password
+    volumes:
+      - /home/clouduser/.config/ea-desk/odoo/db_password:/run/ea/db_password:ro
+      - ea-db:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  odoo:
+    image: odoo:18.0
+    depends_on: [db]
+    ports:
+      - "127.0.0.1:8069:8069"   # only via Caddy
+    volumes:
+      - /home/clouduser/Projects/ea-desk-release/odoo/addons:/mnt/extra-addons:ro
+      - /home/clouduser/.config/ea-desk/odoo/odoo.conf:/etc/odoo/odoo.conf:ro
+      - ea-filestore:/var/lib/odoo
+    restart: unless-stopped
+
+volumes:
+  ea-db:
+  ea-filestore:

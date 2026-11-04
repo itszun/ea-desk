@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ea_issue_list" model="ir.ui.view">
+        <field name="name">ea.issue.list</field>
+        <field name="model">ea.issue</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="state != 'open'">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="kind"/>
+                <field name="engagement_id"/>
+                <field name="owner"/>
+                <field name="due_date"/>
+                <field name="state" widget="badge" decoration-warning="state == 'open'" decoration-success="state == 'resolved'" decoration-info="state == 'to_adr'"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_ea_issue_form" model="ir.ui.view">
+        <field name="name">ea.issue.form</field>
+        <field name="model">ea.issue</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_convert_to_adr" type="object" string="Jadikan ADR" class="btn-primary" invisible="state != 'open'"
+                            help="Opsi sudah jelas dan siap diputuskan Sponsor"/>
+                    <button name="action_resolve" type="object" string="Tandai selesai" invisible="state != 'open'"/>
+                    <button name="action_reopen" type="object" string="Buka kembali" invisible="state != 'resolved'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <div class="text-muted font-monospace"><field name="code" readonly="1"/></div>
+                        <h1><field name="name" placeholder="mis. Rumah Proses Bisnis: S3.1.3 EA atau BPO/TO?"/></h1>
+                    </div>
+                    <group>
+                        <group><field name="kind"/><field name="engagement_id"/><field name="decision_id" invisible="not decision_id"/></group>
+                        <group><field name="owner"/><field name="due_date"/></group>
+                    </group>
+                    <group><field name="description"/><field name="follow_up"/><field name="resolution" invisible="state == 'to_adr'"/></group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="view_ea_issue_search" model="ir.ui.view">
+        <field name="name">ea.issue.search</field>
+        <field name="model">ea.issue</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+                <field name="engagement_id"/>
+                <filter name="open" string="Terbuka" domain="[('state', '=', 'open')]"/>
+                <filter name="assumption" string="Asumsi" domain="[('kind', '=', 'assumption')]"/>
+                <group expand="0" string="Kelompokkan"><filter name="group_engagement" string="Engagement" context="{'group_by': 'engagement_id'}"/></group>
+            </search>
+        </field>
+    </record>
+    <record id="action_ea_issue" model="ir.actions.act_window">
+        <field name="name">Isu &amp; Asumsi</field>
+        <field name="res_model">ea.issue</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_open': 1}</field>
+        <field name="help" type="html"><p>Isu dan asumsi yang belum siap diputuskan. Saat opsinya jelas, jadikan ADR.</p></field>
+    </record>
+</odoo>

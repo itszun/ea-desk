@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tata kelola Planting Seed: tahap, mode, kriteria gerbang, prinsip -->
+    <record id="view_ea_stage_list" model="ir.ui.view">
+        <field name="name">ea.stage.list</field>
+        <field name="model">ea.stage</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="title"/>
+                <field name="approver"/>
+                <field name="purpose"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_ea_stage_form" model="ir.ui.view">
+        <field name="name">ea.stage.form</field>
+        <field name="model">ea.stage</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name"/></h1><field name="title"/></div>
+                    <group><field name="code"/><field name="approver"/><field name="fold"/><field name="purpose"/></group>
+                    <field name="criterion_ids">
+                        <list editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="name"/>
+                            <field name="mode_ids" widget="many2many_tags"/>
+                            <field name="optional"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_ea_stage" model="ir.actions.act_window">
+        <field name="name">Tahap &amp; kriteria gerbang</field>
+        <field name="res_model">ea.stage</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_ea_mode_list" model="ir.ui.view">
+        <field name="name">ea.mode.list</field>
+        <field name="model">ea.mode</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="number"/>
+                <field name="name"/>
+                <field name="touch"/>
+                <field name="load"/>
+                <field name="stage_ids" widget="many2many_tags"/>
+                <field name="when"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_ea_mode_form" model="ir.ui.view">
+        <field name="name">ea.mode.form</field>
+        <field name="model">ea.mode</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name"/></h1></div>
+                    <group>
+                        <group><field name="number"/><field name="touch"/><field name="load"/><field name="color" widget="color_picker"/></group>
+                        <group><field name="stage_ids" widget="many2many_tags"/></group>
+                    </group>
+                    <group><field name="when"/><field name="ea_role"/></group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_ea_mode" model="ir.actions.act_window">
+        <field name="name">Mode Keterlibatan EA</field>
+        <field name="res_model">ea.mode</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_ea_principle_list" model="ir.ui.view">
+        <field name="name">ea.principle.list</field>
+        <field name="model">ea.principle</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="description"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_ea_principle" model="ir.actions.act_window">
+        <field name="name">Prinsip Fit-for-Purpose</field>
+        <field name="res_model">ea.principle</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

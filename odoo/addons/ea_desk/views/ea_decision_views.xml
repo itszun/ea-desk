@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ea_decision_list" model="ir.ui.view">
+        <field name="name">ea.decision.list</field>
+        <field name="model">ea.decision</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="engagement_id"/>
+                <field name="state" widget="badge" decoration-warning="state == 'proposed'" decoration-success="state == 'accepted'" decoration-danger="state == 'rejected'"/>
+                <field name="decided_by"/>
+                <field name="decided_date"/>
+                <field name="create_date" string="Diusulkan"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_ea_decision_form" model="ir.ui.view">
+        <field name="name">ea.decision.form</field>
+        <field name="model">ea.decision</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_accept" type="object" string="Sahkan (Accepted)" class="btn-primary" invisible="state != 'proposed'"/>
+                    <button name="action_reject" type="object" string="Tolak" invisible="state != 'proposed'"/>
+                    <button name="action_supersede" type="object" string="Tandai Superseded" invisible="state != 'accepted'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="proposed,accepted"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <div class="text-muted"><field name="code" readonly="1"/></div>
+                        <h1><field name="name" placeholder="mis. Ariba menjadi System of Record data vendor"/></h1>
+                    </div>
+                    <group>
+                        <group><field name="engagement_id"/></group>
+                        <group>
+                            <field name="decided_by" placeholder="Biasanya Sponsor (Accountable)"/>
+                            <field name="decided_date"/>
+                            <field name="superseded_by_id" readonly="state != 'accepted'"/>
+                            <field name="superseded_date" invisible="state != 'superseded'"/>
+                        </group>
+                    </group>
+                    <group string="Menggantikan" invisible="not supersedes_ids">
+                        <field name="supersedes_ids" readonly="1" nolabel="1" colspan="2">
+                            <list>
+                                <field name="code"/>
+                                <field name="name" string="Judul"/>
+                                <field name="state" widget="badge" decoration-warning="state == 'proposed'" decoration-success="state == 'accepted'" decoration-danger="state == 'rejected'"/>
+                            </list>
+                        </field>
+                    </group>
+                    <group string="Context"><field name="context" nolabel="1" colspan="2" placeholder="Masalah, batasan, dan pemicu keputusan"/></group>
+                    <group string="Alternatives considered"><field name="alternatives" nolabel="1" colspan="2"/></group>
+                    <group string="Decision"><field name="decision" nolabel="1" colspan="2" placeholder="Wajib diisi sebelum disahkan"/></group>
+                    <group string="Consequences"><field name="consequences" nolabel="1" colspan="2" placeholder="Dampak, risiko sisa, dan komitmen mitigasi"/></group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="view_ea_decision_search" model="ir.ui.view">
+        <field name="name">ea.decision.search</field>
+        <field name="model">ea.decision</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="engagement_id"/>
+                <filter name="proposed" string="Menunggu keputusan" domain="[('state', '=', 'proposed')]"/>
+                <filter name="waiting_long" string="Menunggu &gt; 7 hari" domain="[('state', '=', 'proposed'), ('create_date', '&lt;', (context_today() - relativedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <filter name="accepted" string="Disahkan" domain="[('state', '=', 'accepted')]"/>
+                <separator/>
+                <filter name="decided_90" string="Diputuskan 90 hari terakhir" domain="[('decided_date', '&gt;=', (context_today() - relativedelta(days=90)).strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Kelompokkan">
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="group_engagement" string="Engagement" context="{'group_by': 'engagement_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="view_ea_decision_graph" model="ir.ui.view">
+        <field name="name">ea.decision.graph</field>
+        <field name="model">ea.decision</field>
+        <field name="arch" type="xml">
+            <graph type="bar"><field name="decided_date" interval="month"/></graph>
+        </field>
+    </record>
+    <record id="action_ea_decision" model="ir.actions.act_window">
+        <field name="name">Keputusan Arsitektur (ADR)</field>
+        <field name="res_model">ea.decision</field>
+        <field name="view_mode">list,form,graph</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Belum ada keputusan arsitektur</p>
+            <p>Context · Alternatives · Decision · Consequences. Deviasi dan trade-off wajib tercatat di sini (O-S313-04).</p>
+        </field>
+    </record>
+    <record id="action_ea_decision_impact" model="ir.actions.act_window">
+        <field name="name">Keputusan disahkan</field>
+        <field name="res_model">ea.decision</field>
+        <field name="view_mode">graph,list</field>
+        <field name="context">{'search_default_accepted': 1}</field>
+    </record>
+</odoo>

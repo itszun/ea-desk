@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ea_document_wizard_form" model="ir.ui.view">
+        <field name="name">ea.document.wizard.form</field>
+        <field name="model">ea.document.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <p class="text-muted small">
+                    Dokumen disusun dari <b>Standar Struktur Deliverable EA</b>: bagian tata kelola diambil dari EA Desk,
+                    bab metode dan konten baku dari katalog Produk EA, dan bab analisis disiapkan untuk diisi manual.
+                </p>
+                <separator string="Validasi kelengkapan sumber"/>
+                <field name="findings_html" nolabel="1"/>
+                <field name="blocked" invisible="1"/>
+                <field name="engagement_id" invisible="1"/>
+                <group>
+                    <field name="artifact_id" options="{'no_create': True}" placeholder="Kosong = daftarkan artefak baru"/>
+                    <field name="new_name" invisible="artifact_id"/>
+                    <field name="owner" invisible="artifact_id"/>
+                    <field name="version"/>
+                </group>
+                <footer>
+                    <button name="action_generate" type="object" string="Buat / perbarui dokumen" class="btn-primary" invisible="blocked"/>
+                    <button string="Tutup" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

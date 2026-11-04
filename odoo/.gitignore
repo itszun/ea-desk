@@ -1,0 +1,6 @@
+# Lihat aturan di /.gitignore. Khusus Odoo:
+# - rahasia & odoo.conf ada di ~/.config/ea-desk/odoo (tidak pernah di repo)
+# - backup ada di ~/.local/share/ea-desk/backups
+# Penjaga bila skrip lama menulis ke lokasi di dalam repo:
+config/
+backups/

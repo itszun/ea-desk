@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ea_foundation_kanban" model="ir.ui.view">
+        <field name="name">ea.foundation.item.kanban</field>
+        <field name="model">ea.foundation.item</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" quick_create="1" group_create="0" group_delete="0">
+                <templates>
+                    <t t-name="card">
+                        <field name="kind" widget="badge"/>
+                        <field name="name" class="fw-bold mt-1"/>
+                        <field name="description" class="small text-muted"/>
+                        <footer class="small">
+                            <field name="product_id" widget="badge" decoration-info="1"/>
+                            <field name="engagement_id" class="text-muted ms-auto"/>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="view_ea_foundation_list" model="ir.ui.view">
+        <field name="name">ea.foundation.item.list</field>
+        <field name="model">ea.foundation.item</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="kind"/>
+                <field name="product_id"/>
+                <field name="engagement_id"/>
+                <field name="state" widget="badge" decoration-warning="state == 'backlog'" decoration-success="state == 'done'"/>
+                <field name="done_date"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_ea_foundation_form" model="ir.ui.view">
+        <field name="name">ea.foundation.item.form</field>
+        <field name="model">ea.foundation.item</field>
+        <field name="arch" type="xml">
+            <form>
+                <header><field name="state" widget="statusbar" options="{'clickable': '1'}"/></header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" placeholder="mis. Standar penamaan entitas data MRT"/></h1></div>
+                    <group>
+                        <group><field name="kind"/><field name="product_id"/></group>
+                        <group><field name="engagement_id"/><field name="done_date"/></group>
+                    </group>
+                    <group><field name="description"/></group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="view_ea_foundation_search" model="ir.ui.view">
+        <field name="name">ea.foundation.item.search</field>
+        <field name="model">ea.foundation.item</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="product_id"/>
+                <filter name="general" string="Fondasi umum" domain="[('product_id', '=', False)]"/>
+                <filter name="recipe" string="Perbaikan resep produk" domain="[('product_id', '!=', False)]"/>
+                <group expand="0" string="Kelompokkan">
+                    <filter name="group_product" string="Produk" context="{'group_by': 'product_id'}"/>
+                    <filter name="group_kind" string="Jenis" context="{'group_by': 'kind'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="action_ea_foundation" model="ir.actions.act_window">
+        <field name="name">Backlog /foundation</field>
+        <field name="res_model">ea.foundation.item</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Backlog /foundation kosong</p>
+            <p>Perbaikan prinsip, metamodel, notasi, template, dan resep produk. Diisi dari lessons learned /harvest atau pekerjaan Mode 4 Curator.</p>
+        </field>
+    </record>
+</odoo>

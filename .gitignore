@@ -1,0 +1,12 @@
+# Aturan: semua file sistem (kode, view, data seed, konfigurasi non-rahasia, skrip,
+# asset yang dipakai) WAJIB di git. Yang diabaikan hanya data transaksi dan hasil
+# generate saat berjalan. Rahasia disimpan di luar repo (~/.config/ea-desk/).
+
+# Data transaksi POC (default DB_FILE bila service tidak menyetelnya)
+/data/
+# Dependensi & cache hasil generate
+node_modules/
+__pycache__/
+*.pyc
+# Log
+*.log

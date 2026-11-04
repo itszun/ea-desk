@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="ea_desk.MarkdownField">
+        <div class="o_ea_md_field w-100">
+            <div class="o_ea_md_toolbar" t-if="props.showToolbar">
+                <button type="button" class="btn btn-primary btn-sm" t-on-click="copyFormatted"><i class="fa fa-clipboard me-1"/>Salin berformat (Word/Docs)</button>
+                <button type="button" class="btn btn-secondary btn-sm" t-on-click="copyMarkdown"><i class="fa fa-code me-1"/>Salin Markdown</button>
+            </div>
+            <div class="o_ea_markdown" t-ref="content" t-out="html"/>
+        </div>
+    </t>
+</templates>

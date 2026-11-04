@@ -1,0 +1,8 @@
+# Tambahkan ke /etc/caddy/Caddyfile (di atas blok ":80"), lalu reload Caddy.
+# Hash password dibuat dengan: caddy hash-password
+ea.weiwu.my.id {
+	basicauth {
+		malik $2a$14$PEqQSPEli5FmLkY.fmyg.eptzlg0Igu7aP.BSJRGBQ1mrHC.WO1W2
+	}
+	reverse_proxy 127.0.0.1:8090
+}

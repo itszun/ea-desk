@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Capacity limit in load points (Co-Pilot 3, Advisor 2, Gatekeeper/Curator 1). Edit in Settings → Technical → System Parameters. -->
+    <record id="param_capacity_limit" model="ir.config_parameter">
+        <field name="key">ea_desk.capacity_limit</field>
+        <field name="value">8</field>
+    </record>
+</odoo>

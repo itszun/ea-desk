@@ -1,0 +1,12 @@
+{
+  "name": "ea-desk",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Sistem manajemen kerja fungsi Enterprise Architecture (Planting Seed / TOGAF 10)",
+  "type": "module",
+  "engines": { "node": ">=24" },
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  }
+}

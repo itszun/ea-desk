@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ea_artifact_list" model="ir.ui.view">
+        <field name="name">ea.artifact.list</field>
+        <field name="model">ea.artifact</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="document_code" optional="show"/>
+                <field name="type"/>
+                <field name="engagement_id"/>
+                <field name="owner"/>
+                <field name="consumer"/>
+                <field name="location" widget="url"/>
+                <field name="attachment_count" string="Unggahan" optional="show"/>
+                <field name="state" widget="badge" decoration-warning="state == 'draft'" decoration-info="state == 'approved'" decoration-success="state == 'harvested'"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_ea_artifact_form" model="ir.ui.view">
+        <field name="name">ea.artifact.form</field>
+        <field name="model">ea.artifact</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_preview_document" type="object" string="Lihat dokumen" icon="fa-eye" class="btn-primary" invisible="not doc_body"/>
+                    <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <div class="text-muted small mb-2">No Orphan Architecture: setiap artefak punya Owner, Consumer, dan tujuan. Artefaknya sendiri tetap di tool asal.</div>
+                    <div class="oe_title"><h1><field name="name" placeholder="mis. Capability Map L2 Procurement"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="type"/>
+                            <field name="owner"/>
+                            <field name="consumer"/>
+                        </group>
+                        <group>
+                            <field name="engagement_id"/>
+                            <field name="step_id" readonly="1" invisible="not step_id"/>
+                        </group>
+                    </group>
+                    <group><field name="purpose"/></group>
+                    <group string="Dokumen deliverable" invisible="not document_code">
+                        <group><field name="document_code"/><field name="doc_version"/></group>
+                        <group><field name="doc_generated_at"/><field name="doc_body" invisible="1"/></group>
+                    </group>
+                    <group string="Dokumen: tautan atau unggahan">
+                        <field name="location" widget="url" placeholder="https://… (SharePoint, Google Docs, Git)"/>
+                        <field name="attachment_ids" widget="many2many_binary"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="view_ea_artifact_search" model="ir.ui.view">
+        <field name="name">ea.artifact.search</field>
+        <field name="model">ea.artifact</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="owner"/>
+                <field name="engagement_id"/>
+                <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="seedbank" string="Di seedbank" domain="[('state', '=', 'harvested')]"/>
+                <filter name="foundation" string="Aset fondasi" domain="[('engagement_id', '=', False)]"/>
+                <group expand="0" string="Kelompokkan">
+                    <filter name="group_type" string="Jenis" context="{'group_by': 'type'}"/>
+                    <filter name="group_owner" string="Owner" context="{'group_by': 'owner'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="action_ea_artifact" model="ir.actions.act_window">
+        <field name="name">Register Artefak</field>
+        <field name="res_model">ea.artifact</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Belum ada artefak terdaftar</p>
+            <p>Indeks artefak bertuan. Bukan repository: artefaknya sendiri tetap tinggal di tool asalnya.</p>
+        </field>
+    </record>
+</odoo>

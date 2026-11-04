@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Template preview: an editable textarea copy, with copy and download -->
+    <record id="view_ea_template_preview_form" model="ir.ui.view">
+        <field name="name">ea.template.preview.form</field>
+        <field name="model">ea.template.preview</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="alert alert-info small" role="status">
+                    Klik <b>Salin berformat</b>, lalu tempel ke dokumen di penyimpanan resmi (Word di SharePoint/OneDrive atau Google Docs): judul, tabel, daftar, dan tautan ikut terbawa.
+                    Setelah itu daftarkan dokumennya sebagai artefak (tautan atau unggahan).
+                </div>
+                <field name="body" widget="ea_markdown" readonly="1" nolabel="1"/>
+                <field name="template_id" invisible="1"/>
+                <field name="artifact_id" invisible="1"/>
+                <footer>
+                    <button name="action_download" type="object" string="Unduh .md" class="btn-primary" icon="fa-download"/>
+                    <button string="Tutup" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ea_product_template_form" model="ir.ui.view">
+        <field name="name">ea.product.template.form</field>
+        <field name="model">ea.product.template</field>
+        <field name="arch" type="xml">
+            <form>
+                <group><field name="name"/><field name="code"/></group>
+                <notebook>
+                    <page string="Tulis (Markdown)" name="write">
+                        <field name="body" class="o_ea_template_text" nolabel="1" placeholder="# Judul deliverable&#10;&#10;## 1. …&#10;&#10;| Kolom | Kolom |&#10;| :-- | :-- |"/>
+                    </page>
+                    <page string="Pratinjau" name="preview">
+                        <field name="body" widget="ea_markdown" readonly="1" nolabel="1"/>
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ea_product_step_form" model="ir.ui.view">
+        <field name="name">ea.product.step.form</field>
+        <field name="model">ea.product.step</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="name" placeholder="mis. D2 · Business Object Discovery"/>
+                        <field name="stage_id" options="{'no_create': True}"/>
+                        <field name="altitude"/>
+                    </group>
+                    <group>
+                        <field name="output" placeholder="mis. Bab D2 di dokumen"/>
+                        <field name="ref" placeholder="mis. Modul 02"/>
+                        <field name="product_id" invisible="1"/>
+                    </group>
+                </group>
+                <group><field name="how" placeholder="Instruksi konkret: apa yang dilakukan, dengan siapa, pakai alat apa."/></group>
+                <group string="Peran dalam dokumen deliverable">
+                    <group>
+                        <field name="step_type" widget="radio" options="{'horizontal': true}"/>
+                        <field name="doc_section" invisible="step_type == 'governance'"/>
+                    </group>
+                    <group invisible="not doc_section or step_type == 'governance'">
+                        <field name="section_title" placeholder="Kosong = nama langkah"/>
+                        <field name="content_id" options="{'no_create': True}"/>
+                    </group>
+                </group>
+                <group>
+                    <group string="Menghasilkan artefak terdaftar">
+                        <field name="artifact_name" placeholder="Kosongkan bila tidak ada"/>
+                        <field name="artifact_type" invisible="not artifact_name"/>
+                        <field name="template_id" invisible="not artifact_name" options="{'no_create': True}"/>
+                    </group>
+                    <group string="Menghasilkan keputusan">
+                        <field name="makes_adr"/>
+                        <field name="adr_title" invisible="not makes_adr"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <!-- Katalog: what EA delivers -->
+    <record id="view_ea_product_kanban" model="ir.ui.view">
+        <field name="name">ea.product.kanban</field>
+        <field name="model">ea.product</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="maturity"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex justify-content-between">
+                            <field name="maturity" widget="badge" decoration-warning="maturity == 'draft'" decoration-info="maturity == 'tested'" decoration-success="maturity == 'standard'"/>
+                            <span class="text-muted small"><field name="sop_output"/> · v<field name="version"/></span>
+                        </div>
+                        <field name="name" class="fw-bold fs-5 mt-2"/>
+                        <field name="decision" class="text-muted small"/>
+                        <div class="small mt-1"><b>Deliverable:</b> <field name="deliverable"/></div>
+                        <footer class="small text-muted mt-2">
+                            <span><field name="engagement_count"/> engagement</span>
+                            <span class="ms-2"><field name="improvement_open_count"/> masukan terbuka</span>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Pembuatan Produk: how it is made -->
+    <record id="view_ea_product_list" model="ir.ui.view">
+        <field name="name">ea.product.list</field>
+        <field name="model">ea.product</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="deliverable"/>
+                <field name="maturity" widget="badge" decoration-warning="maturity == 'draft'" decoration-info="maturity == 'tested'" decoration-success="maturity == 'standard'"/>
+                <field name="version"/>
+                <field name="engagement_count" string="Dipakai"/>
+                <field name="improvement_open_count" decoration-warning="improvement_open_count &gt; 0"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ea_product_form" model="ir.ui.view">
+        <field name="name">ea.product.form</field>
+        <field name="model">ea.product</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_new_engagement" type="object" string="+ Engagement dengan produk ini" class="btn-primary"/>
+                    <field name="maturity" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_engagements" type="object" class="oe_stat_button" icon="fa-tasks">
+                            <field name="engagement_count" widget="statinfo" string="Engagement"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="mis. Peta Kapabilitas Bisnis L1–L2"/></h1>
+                    </div>
+                    <div class="alert alert-light border small" role="status">
+                        <b>Dua sumbu yang berbeda.</b> Planting Seed mengatur tata kelola (kapan EA terlibat, siapa menyetujui, kapan aset dipanen) dan sama untuk semua produk.
+                        Metode produk mengatur cara memproduksi deliverable. Setiap langkah dipetakan ke tahap Planting Seed tempat ia dikerjakan.
+                    </div>
+                    <group string="1 · Spesifikasi produk">
+                        <group>
+                            <field name="decision" placeholder="Decision First: keputusan apa, oleh siapa?"/>
+                            <field name="deliverable"/>
+                            <field name="customer"/>
+                            <field name="when_to_use"/>
+                        </group>
+                        <group>
+                            <field name="service"/>
+                            <field name="sop_output" placeholder="O-S313-0x"/>
+                            <field name="default_mode_id" options="{'no_create': True}"/>
+                            <field name="version"/>
+                            <field name="ref"/>
+                            <field name="code" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Standar dokumen deliverable">
+                        <group>
+                            <field name="classification_id" options="{'no_create': True}"/>
+                            <field name="document_scheme_id" options="{'no_create': True}" placeholder="Skema bawaan"/>
+                        </group>
+                        <group>
+                            <field name="doc_template_id" options="{'no_create': True}" placeholder="Standar Struktur Deliverable EA"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="2 · Metode (resep kerja)" name="method">
+                            <div class="text-muted small mb-2"><field name="stage_map"/></div>
+                            <field name="step_ids" context="{'default_product_id': id}">
+                                <list>
+                                    <field name="stage_sequence" column_invisible="1"/>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="stage_id"/>
+                                    <field name="name"/>
+                                    <field name="altitude"/>
+                                    <field name="output"/>
+                                    <field name="step_type" string="Jenis"/>
+                                    <field name="doc_section" string="Bab"/>
+                                    <field name="artifact_name" string="Artefak"/>
+                                    <field name="makes_adr" string="ADR"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="3 · Template dokumen" name="templates">
+                            <div class="text-muted small mb-2">Kerangka bab dalam Markdown. Buat template hanya untuk langkah yang menghasilkan dokumen.</div>
+                            <field name="template_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <button name="action_open_preview" type="object" string="Pratinjau" icon="fa-eye"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Konten baku" name="contents">
+                            <div class="text-muted small mb-2">Konten standar produk yang dipakai ulang di setiap engagement (mis. tabel kriteria D1). Tempelkan ke langkah lewat "Konten baku di bab ini", atau pakai token <code>{{konten:kode}}</code> di template.</div>
+                            <field name="content_ids">
+                                <list>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                </list>
+                                <form>
+                                    <group><field name="name"/><field name="code"/></group>
+                                    <notebook>
+                                        <page string="Tulis (Markdown)"><field name="body" class="o_ea_template_text" nolabel="1"/></page>
+                                        <page string="Pratinjau"><field name="body" widget="ea_markdown" readonly="1" nolabel="1" options="{'toolbar': false}"/></page>
+                                    </notebook>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="4 · Tools pendukung" name="tools">
+                            <field name="tool_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="ref"/>
+                                    <field name="template_id" options="{'no_create': True}"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Masukan perbaikan" name="improvements">
+                            <div class="text-muted small mb-2">Lessons learned dari /harvest engagement yang memakai produk ini. Tandai setelah diserap ke resep.</div>
+                            <field name="improvement_ids" readonly="1">
+                                <list decoration-muted="state == 'done'">
+                                    <field name="name"/>
+                                    <field name="engagement_id"/>
+                                    <field name="state" widget="badge" decoration-warning="state == 'backlog'" decoration-success="state == 'done'"/>
+                                    <button name="action_mark_absorbed" type="object" string="Tandai sudah diserap" invisible="state == 'done'" class="btn-link"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Panduan merancang" name="guide">
+                            <ol class="small">
+                                <li><b>Keputusan dulu:</b> keputusan apa, oleh siapa? Kalau tidak jelas, ini belum produk.</li>
+                                <li><b>Deliverable:</b> apa yang disahkan? Artefak (catalog, matrix, diagram) mana yang ada di dalamnya?</li>
+                                <li><b>Metode:</b> urutkan langkah dari L0 ke L1. Parkir detail L2+ di catatan implementasi.</li>
+                                <li><b>Petakan</b> setiap langkah ke tahap Planting Seed. Kriteria yang perlu disetujui Sponsor sebaiknya selesai sebelum gerbang.</li>
+                                <li><b>Template</b> hanya untuk langkah yang menghasilkan dokumen. Jangan buat template yang belum pernah dipakai.</li>
+                                <li><b>Kematangan:</b> naik ke Teruji setelah dipakai ≥1 engagement, dan ke Baku setelah resep stabil.</li>
+                            </ol>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ea_product_search" model="ir.ui.view">
+        <field name="name">ea.product.search</field>
+        <field name="model">ea.product</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter name="usable" string="Bisa dipesan" domain="[('maturity', '!=', 'obsolete')]"/>
+                <filter name="has_feedback" string="Ada masukan terbuka" domain="[('improvement_ids.state', '!=', 'done')]"/>
+                <filter name="archived" string="Diarsipkan" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ea_product_catalog" model="ir.actions.act_window">
+        <field name="name">Katalog Produk EA</field>
+        <field name="res_model">ea.product</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="context">{'search_default_usable': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Belum ada produk EA</p>
+            <p>Produk adalah layanan EA terstandar (TOGAF EA Services) yang menghasilkan deliverable untuk satu jenis keputusan.</p>
+        </field>
+    </record>
+    <record id="action_ea_product_studio" model="ir.actions.act_window">
+        <field name="name">Pembuatan Produk EA</field>
+        <field name="res_model">ea.product</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'list', 'view_id': ref('view_ea_product_list')}), (0, 0, {'view_mode': 'form', 'view_id': ref('view_ea_product_form')})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Rancang produk EA pertama</p>
+            <p>Layanan internal EA (TOGAF: EA Practice Development): merancang dan memperbaiki metode setiap produk.</p>
+        </field>
+    </record>
+
+    <record id="view_ea_product_template_list" model="ir.ui.view">
+        <field name="name">ea.product.template.list</field>
+        <field name="model">ea.product.template</field>
+        <field name="arch" type="xml">
+            <list create="0">
+                <field name="name"/>
+                <field name="product_id" string="Produk" placeholder="Umum"/>
+                <button name="action_open_preview" type="object" string="Buka" icon="fa-eye" class="btn-link"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_ea_product_template_search" model="ir.ui.view">
+        <field name="name">ea.product.template.search</field>
+        <field name="model">ea.product.template</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="product_id"/>
+                <filter name="generic" string="Template umum" domain="[('product_id', '=', False)]"/>
+                <group expand="0" string="Kelompokkan"><filter name="group_product" string="Produk" context="{'group_by': 'product_id'}"/></group>
+            </search>
+        </field>
+    </record>
+    <record id="action_ea_templates" model="ir.actions.act_window">
+        <field name="name">Template Dokumen</field>
+        <field name="res_model">ea.product.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_ea_product_template_list"/>
+        <field name="context">{'search_default_group_product': 1}</field>
+        <field name="help" type="html"><p>Template dirancang di Produk EA → Pembuatan Produk.</p></field>
+    </record>
+
+    <record id="view_ea_default_step_list" model="ir.ui.view">
+        <field name="name">ea.product.step.default.list</field>
+        <field name="model">ea.product.step</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="stage_sequence" column_invisible="1"/>
+                <field name="sequence" widget="handle"/>
+                <field name="stage_id"/>
+                <field name="name"/>
+                <field name="altitude"/>
+                <field name="output"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_ea_default_steps" model="ir.actions.act_window">
+        <field name="name">Resep umum Planting Seed</field>
+        <field name="res_model">ea.product.step</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_ea_default_step_list"/>
+        <field name="domain">[('product_id', '=', False)]</field>
+        <field name="help" type="html"><p>Langkah yang dipakai engagement tanpa produk, atau pada tahap yang tidak dipetakan oleh metode produk.</p></field>
+    </record>
+</odoo>

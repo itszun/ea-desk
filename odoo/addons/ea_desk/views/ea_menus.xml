@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_ea_root" name="EA Desk" web_icon="ea_desk,static/description/icon.png" sequence="5" groups="group_ea_user"/>
+
+    <record id="action_ea_executive_summary" model="ir.actions.client">
+        <field name="name">Ringkasan Eksekutif</field>
+        <field name="tag">ea_desk.executive_summary</field>
+    </record>
+    <menuitem id="menu_ea_summary" name="Ringkasan Eksekutif" parent="menu_ea_root" action="action_ea_executive_summary" sequence="5"/>
+    <menuitem id="menu_ea_board" name="Meja Kerja" parent="menu_ea_root" action="action_ea_desk_board" sequence="10"/>
+    <menuitem id="menu_ea_attention" name="Perlu perhatian" parent="menu_ea_root" action="action_ea_attention" sequence="15"/>
+
+    <menuitem id="menu_ea_work" name="Pekerjaan" parent="menu_ea_root" sequence="20"/>
+    <menuitem id="menu_ea_engagement" name="Engagement" parent="menu_ea_work" action="action_ea_engagement" sequence="10"/>
+    <menuitem id="menu_ea_decision" name="Keputusan (ADR)" parent="menu_ea_work" action="action_ea_decision" sequence="20"/>
+    <menuitem id="menu_ea_artifact" name="Register Artefak" parent="menu_ea_work" action="action_ea_artifact" sequence="30"/>
+    <menuitem id="menu_ea_issue" name="Isu &amp; Asumsi" parent="menu_ea_work" action="action_ea_issue" sequence="25"/>
+    <menuitem id="menu_ea_templates" name="Template Dokumen" parent="menu_ea_work" action="action_ea_templates" sequence="35"/>
+    <menuitem id="menu_ea_foundation" name="Backlog /foundation" parent="menu_ea_work" action="action_ea_foundation" sequence="40"/>
+
+    <menuitem id="menu_ea_product" name="Produk EA" parent="menu_ea_root" sequence="30"/>
+    <menuitem id="menu_ea_product_catalog" name="Katalog Produk EA" parent="menu_ea_product" action="action_ea_product_catalog" sequence="10"/>
+    <menuitem id="menu_ea_product_studio" name="Pembuatan Produk" parent="menu_ea_product" action="action_ea_product_studio" sequence="20" groups="group_ea_manager"/>
+
+    <menuitem id="menu_ea_report" name="Laporan" parent="menu_ea_root" sequence="40"/>
+    <menuitem id="menu_ea_capacity" name="Kapasitas EA" parent="menu_ea_report" action="action_ea_capacity" sequence="10"/>
+    <menuitem id="menu_ea_gate_impact" name="Jejak dampak: gerbang" parent="menu_ea_report" action="action_ea_gate_impact" sequence="20"/>
+    <menuitem id="menu_ea_decision_impact" name="Jejak dampak: keputusan" parent="menu_ea_report" action="action_ea_decision_impact" sequence="30"/>
+
+    <menuitem id="menu_ea_config" name="Konfigurasi" parent="menu_ea_root" sequence="90" groups="group_ea_manager"/>
+    <menuitem id="menu_ea_config_stage" name="Tahap &amp; kriteria gerbang" parent="menu_ea_config" action="action_ea_stage" sequence="10"/>
+    <menuitem id="menu_ea_config_mode" name="Mode Keterlibatan EA" parent="menu_ea_config" action="action_ea_mode" sequence="20"/>
+    <menuitem id="menu_ea_config_steps" name="Resep umum Planting Seed" parent="menu_ea_config" action="action_ea_default_steps" sequence="30"/>
+    <menuitem id="menu_ea_config_principle" name="Prinsip Fit-for-Purpose" parent="menu_ea_config" action="action_ea_principle" sequence="40"/>
+    <menuitem id="menu_ea_config_standard" name="Standar Struktur Deliverable" parent="menu_ea_config" action="action_ea_standard_structure" sequence="50"/>
+    <menuitem id="menu_ea_config_classification" name="Klasifikasi Informasi" parent="menu_ea_config" action="action_ea_info_classification" sequence="60"/>
+    <menuitem id="menu_ea_config_scheme" name="Skema Kode Dokumen" parent="menu_ea_config" action="action_ea_document_scheme" sequence="70"/>
+
+</odoo>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Klasifikasi Informasi (reference data). Lokal sampai Skema Klasifikasi Informasi enterprise
+         milik Keamanan Informasi (S3.5.1) tersedia; lihat ADR-006 analisis domain S3. -->
+    <record id="classification_public" model="ea.info.classification">
+        <field name="sequence">10</field><field name="code">PUBLIK</field><field name="name">Publik</field>
+        <field name="handling">Boleh dipublikasikan ke luar perusahaan.</field>
+    </record>
+    <record id="classification_internal" model="ea.info.classification">
+        <field name="sequence">20</field><field name="code">INTERNAL</field><field name="name">Internal</field>
+        <field name="handling">Untuk karyawan dan pihak internal; tidak dibagikan ke luar tanpa persetujuan pemilik.</field>
+    </record>
+    <record id="classification_confidential" model="ea.info.classification">
+        <field name="sequence">30</field><field name="code">RAHASIA</field><field name="name">Rahasia</field>
+        <field name="handling">Terbatas pada pihak yang ditunjuk; distribusi tercatat.</field>
+    </record>
+    <record id="classification_secret" model="ea.info.classification">
+        <field name="sequence">40</field><field name="code">SANGAT-RAHASIA</field><field name="name">Sangat Rahasia</field>
+        <field name="handling">Hanya penerima bernama; tidak disalin atau diteruskan.</field>
+    </record>
+
+    <!-- Skema Kode Dokumen (reference data) -->
+    <record id="scheme_default" model="ea.document.scheme">
+        <field name="name">Deliverable per engagement</field>
+        <field name="prefix">DLV</field>
+        <field name="pattern">{prefix}/{sop}/{engagement}</field>
+        <field name="is_default" eval="True"/>
+        <field name="description">Usulan awal. Sesuaikan dengan penomoran Document Control WIKA bila sudah ada.</field>
+    </record>
+
+    <!-- Standar Struktur Deliverable EA: kerangka global untuk semua produk.
+         "##§" = bab bernomor otomatis; {{blok:…}} = bagian otomatis; {{konten:…}} = konten baku produk. -->
+    <record id="template_standard_deliverable" model="ea.product.template">
+        <field name="code">standar-deliverable</field>
+        <field name="name">Standar Struktur Deliverable EA</field>
+        <field name="body"># {{dokumen.judul}}
+
+{{blok:lembar_kendali}}
+
+{{blok:riwayat_versi}}
+
+## Kata Pengantar
+
+> ✎ *Diisi manual:* pengantar dari arsitek atau atas nama pimpinan.
+
+## Daftar Isi
+
+> *Dibuat otomatis oleh Word/Docs dari judul bab.*
+
+##§ Ringkasan Eksekutif
+
+{{blok:ringkasan}}
+
+##§ Tujuan Dokumen
+
+{{blok:tujuan}}
+
+##§ Ruang Lingkup
+
+{{blok:ruang_lingkup}}
+
+##§ Metode
+
+{{blok:metode}}
+
+{{blok:bab_isi}}
+
+##§ Keputusan Arsitektur
+
+{{blok:keputusan}}
+
+##§ Isu Terbuka
+
+{{blok:isu_terbuka}}
+
+##§ Pemeliharaan Dokumen
+
+{{blok:pemeliharaan}}
+
+##§ Referensi
+
+{{blok:referensi}}
+
+## Lampiran
+
+> ✎ *Diisi manual:* tabel kerja, data pendukung, dan catatan implementasi (L2+).
+</field>
+    </record>
+</odoo>

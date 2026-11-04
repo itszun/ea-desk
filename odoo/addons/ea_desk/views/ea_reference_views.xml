@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ea_info_classification_list" model="ir.ui.view">
+        <field name="name">ea.info.classification.list</field>
+        <field name="model">ea.info.classification</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="handling"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_ea_info_classification" model="ir.actions.act_window">
+        <field name="name">Klasifikasi Informasi</field>
+        <field name="res_model">ea.info.classification</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html"><p>Reference data level klasifikasi. Ditetapkan per produk, bisa di-override per engagement.</p></field>
+    </record>
+
+    <record id="view_ea_document_scheme_list" model="ir.ui.view">
+        <field name="name">ea.document.scheme.list</field>
+        <field name="model">ea.document.scheme</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="pattern"/>
+                <field name="example"/>
+                <field name="is_default"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_ea_document_scheme_form" model="ir.ui.view">
+        <field name="name">ea.document.scheme.form</field>
+        <field name="model">ea.document.scheme</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" placeholder="mis. Deliverable per engagement"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="prefix"/>
+                            <field name="pattern"/>
+                            <field name="example"/>
+                        </group>
+                        <group>
+                            <field name="is_default"/>
+                            <field name="sequence_id" invisible="not sequence_id"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-light border small" role="status">
+                        Token: <code>{prefix}</code> <code>{sop}</code> (kode output SOP produk) <code>{produk}</code> (kode produk)
+                        <code>{engagement}</code> <code>{tahun}</code> <code>{urut}</code> (nomor urut per skema).
+                        Pola wajib memuat <code>{engagement}</code> atau <code>{urut}</code>. Kode ditetapkan sekali saat dokumen pertama dibuat; versi dicatat terpisah.
+                    </div>
+                    <group><field name="description"/></group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_ea_document_scheme" model="ir.actions.act_window">
+        <field name="name">Skema Kode Dokumen</field>
+        <field name="res_model">ea.document.scheme</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_ea_standard_structure" model="ir.actions.act_window">
+        <field name="name">Standar Struktur Deliverable</field>
+        <field name="res_model">ea.product.template</field>
+        <field name="view_mode">form</field>
+        <field name="res_id" ref="template_standard_deliverable"/>
+    </record>
+</odoo>

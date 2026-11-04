@@ -1,0 +1,698 @@
+{
+  "version": "2026.10-v0.3",
+  "source": "Tata Kelola EA — Siklus Planting Seed & SOP IT & Data 2.3.3 (S3.1.3), selaras TOGAF 10",
+  "stages": [
+    {
+      "id": "seed",
+      "label": "/seed",
+      "name": "Select Seed & Plot",
+      "purpose": "Menilai permintaan, merumuskan masalah & keputusan Sponsor, mengunci batas vertical slice dan Mode EA.",
+      "approver": "Sponsor"
+    },
+    {
+      "id": "sprout",
+      "label": "/sprout",
+      "name": "Sprout & Fertilize",
+      "purpose": "Menyiapkan baseline dan Starter Pack dari repository agar tim proyek tidak mulai dari nol.",
+      "approver": "Enterprise Architect"
+    },
+    {
+      "id": "cultivate",
+      "label": "/cultivate",
+      "name": "Grow & Cultivate",
+      "purpose": "Mengawal rancangan BDAT bersama tim proyek, alignment review, dan mencatat keputusan di ADR.",
+      "approver": "Sponsor"
+    },
+    {
+      "id": "harvest",
+      "label": "/harvest",
+      "name": "Reap & Enrich Seedbank",
+      "purpose": "Verifikasi sign-off, normalisasi metamodel, kurasi ke Master EA Repository, dan lessons learned.",
+      "approver": "Enterprise Architect"
+    }
+  ],
+  "modes": [
+    {
+      "id": 1,
+      "name": "Co-Pilot",
+      "touch": "High Touch",
+      "load": 3,
+      "when": "Transformasi strategis lintas divisi, perubahan proses inti/core system, risiko arsitektur tinggi.",
+      "ea_role": "EA ikut merancang end-to-end vertical slice BDAT, arsitektur konseptual/logis, dan menyusun ADR bersama tim.",
+      "stages": [
+        "seed",
+        "sprout",
+        "cultivate",
+        "harvest"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Advisor",
+      "touch": "Medium Touch",
+      "load": 2,
+      "when": "Pengembangan proses/aplikasi dengan tim analis yang sudah mandiri.",
+      "ea_role": "EA menyediakan Starter Pack, kerangka L1–L2, standar, coaching, dan alignment review. Tim proyek menghasilkan detail L3+.",
+      "stages": [
+        "seed",
+        "sprout",
+        "cultivate",
+        "harvest"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Gatekeeper",
+      "touch": "Low Touch",
+      "load": 1,
+      "when": "Pengadaan aplikasi unit (taktis/departemen), enhancement minor, integrasi lokal berisiko rendah.",
+      "ea_role": "EA memeriksa kepatuhan lewat Architecture Compliance Checklist dan memberi sign-off tanpa ikut merancang.",
+      "stages": [
+        "seed",
+        "cultivate",
+        "harvest"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Curator",
+      "touch": "Foundational",
+      "load": 1,
+      "when": "Pekerjaan internal fungsi EA, arahan strategis manajemen, atau perubahan regulasi.",
+      "ea_role": "EA memelihara /foundation, menjalankan normalisasi /harvest, menjaga peta Enterprise L1 BDAT, dan menyusun impact analysis.",
+      "stages": [
+        "seed",
+        "cultivate",
+        "harvest"
+      ]
+    }
+  ],
+  "triage": [
+    {
+      "id": "internal",
+      "q": "Ini pekerjaan internal fungsi EA atau respons arahan manajemen/regulasi?",
+      "mode": 4
+    },
+    {
+      "id": "cross",
+      "q": "Melibatkan lintas divisi atau mengubah proses inti / core system?",
+      "mode": 1
+    },
+    {
+      "id": "risk",
+      "q": "Risiko arsitekturnya tinggi (data otoritatif, integrasi enterprise, biaya besar)?",
+      "mode": 1
+    },
+    {
+      "id": "mature",
+      "q": "Tim proyek punya analis yang mampu menghasilkan detail L3+ sendiri?",
+      "mode": 2
+    },
+    {
+      "id": "tactical",
+      "q": "Pengadaan taktis unit, enhancement minor, atau integrasi lokal?",
+      "mode": 3
+    }
+  ],
+  "capacity_limit": 8,
+  "checklists": {
+    "seed": [
+      {
+        "id": "problem",
+        "text": "Business Problem Statement dirumuskan bersama Sponsor"
+      },
+      {
+        "id": "decision",
+        "text": "Keputusan yang harus diambil Sponsor jelas (decision first)"
+      },
+      {
+        "id": "parties",
+        "text": "Sponsor dan Domain Owner teridentifikasi"
+      },
+      {
+        "id": "slice",
+        "text": "Batas vertical slice B-D-A-T ditetapkan"
+      },
+      {
+        "id": "mode",
+        "text": "Mode Keterlibatan EA disepakati"
+      },
+      {
+        "id": "scope_ok",
+        "text": "Architecture Scope disetujui Sponsor (Accountable)"
+      }
+    ],
+    "sprout": [
+      {
+        "id": "baseline_cap",
+        "text": "Peta Business Capability L1/L2 area slice diambil dari repository"
+      },
+      {
+        "id": "baseline_cat",
+        "text": "Katalog aplikasi (SoRec/SoRef) & entitas data (MRT) relevan disiapkan"
+      },
+      {
+        "id": "pack",
+        "text": "Starter Pack (template sesuai mode, notasi, prinsip terkait) diserahkan ke Delivery Team & Domain Owner"
+      },
+      {
+        "id": "found_upd",
+        "text": "Kebutuhan pembaruan /foundation (pola/standar baru) dicatat bila ada",
+        "optional": true
+      }
+    ],
+    "cultivate": [
+      {
+        "id": "design",
+        "text": "Rancangan BDAT sesuai mode tersedia (proses L3+, data MRT, integrasi, matriks keterkaitan)",
+        "modes": [
+          1,
+          2
+        ]
+      },
+      {
+        "id": "review",
+        "text": "Architecture Alignment Review dilaksanakan dan hasilnya dicatat",
+        "modes": [
+          1,
+          2
+        ]
+      },
+      {
+        "id": "checklist",
+        "text": "Architecture Compliance Checklist diisi",
+        "modes": [
+          3
+        ]
+      },
+      {
+        "id": "impact",
+        "text": "Hasil analisis/rekomendasi disusun dan dampaknya terhadap fondasi / peta Enterprise L1 BDAT diuraikan",
+        "modes": [
+          4
+        ]
+      },
+      {
+        "id": "adr",
+        "text": "Deviasi, opsi strategis, dan trade-off tercatat di ADR"
+      },
+      {
+        "id": "adr_ok",
+        "text": "ADR yang menjadi mandat bisnis disahkan Sponsor",
+        "modes": [
+          1,
+          2,
+          3,
+          4
+        ]
+      }
+    ],
+    "harvest": [
+      {
+        "id": "signoff",
+        "text": "Artefak final disahkan Sponsor dan Domain Owner"
+      },
+      {
+        "id": "owner",
+        "text": "Pemilik pemeliharaan pascaproyek ditetapkan (No Orphan Architecture)"
+      },
+      {
+        "id": "normalize",
+        "text": "Nama proses, entitas data, dan komponen aplikasi dinormalisasi sesuai katalog",
+        "modes": [
+          1,
+          2,
+          4
+        ]
+      },
+      {
+        "id": "repo",
+        "text": "Master EA Repository / baseline diperbarui"
+      },
+      {
+        "id": "lessons",
+        "text": "Lessons learned dicatat (masuk backlog /foundation bila perlu)"
+      }
+    ]
+  },
+  "strategy_levels": [
+    {
+      "id": "corporate",
+      "name": "Korporat",
+      "hint": "Sinergi lintas unit, konsolidasi portofolio, kepatuhan grup, eliminasi duplikasi"
+    },
+    {
+      "id": "business",
+      "name": "Bisnis",
+      "hint": "Keunggulan bersaing dan nilai pasar, termasuk analitik data/BI"
+    },
+    {
+      "id": "functional",
+      "name": "Fungsional",
+      "hint": "Kapabilitas operasional TI, standardisasi integrasi, modernisasi infrastruktur"
+    }
+  ],
+  "artifact_types": [
+    "Deliverable",
+    "Catalog",
+    "Matrix",
+    "Diagram",
+    "ADR",
+    "Standar/Panduan",
+    "Lainnya"
+  ],
+  "foundation_kinds": [
+    "Prinsip",
+    "Metamodel",
+    "Notasi",
+    "Template",
+    "Standar Teknologi",
+    "Proses Kerja EA"
+  ],
+  "principles": [
+    {
+      "name": "Know Your Customer & Decision First",
+      "text": "Jangan membuat artefak sebelum tahu siapa penggunanya dan keputusan apa yang diambil dengannya."
+    },
+    {
+      "name": "Vertical Slice over Horizontal",
+      "text": "Selesaikan satu kasus bisnis end-to-end lintas B-D-A-T sebelum melebar."
+    },
+    {
+      "name": "Riding Sponsor Strategy",
+      "text": "Alokasikan kapasitas EA pada inisiatif dengan Sponsor jelas, mandat aktif, dan urgensi nyata."
+    },
+    {
+      "name": "Fit-for-Purpose over Perfection",
+      "text": "Kedalaman pemodelan mengikuti risiko dan kebutuhan keputusan — cukupkan di level yang dibutuhkan."
+    },
+    {
+      "name": "No Orphan Architecture",
+      "text": "Tidak ada artefak tanpa Owner pemeliharaan, Consumer, dan tujuan penggunaan."
+    },
+    {
+      "name": "Project Cultivates, EA Harvests",
+      "text": "Tim proyek menyusun detail; EA meninjau, menormalisasi, dan mengkurasi ke Master EA Repository."
+    }
+  ],
+  "raci": {
+    "roles": [
+      "Enterprise Architect",
+      "Sponsor",
+      "Domain Owner",
+      "Delivery Team"
+    ],
+    "rows": [
+      {
+        "area": "Standar /foundation, Starter Pack /sprout, Alignment Review, normalisasi /harvest",
+        "values": [
+          "A/R",
+          "I",
+          "C",
+          "C/I"
+        ]
+      },
+      {
+        "area": "Scope /seed, Blueprint L1–L2, pengesahan ADR",
+        "values": [
+          "R/C",
+          "A",
+          "C",
+          "I"
+        ]
+      },
+      {
+        "area": "Detail operasional L3+, aturan bisnis rinci, konstruksi teknis (/cultivate)",
+        "values": [
+          "C",
+          "I",
+          "A",
+          "R"
+        ]
+      }
+    ]
+  },
+  "default_steps": {
+    "seed": [
+      {
+        "id": "interview",
+        "title": "Wawancara singkat Sponsor (30 menit)",
+        "altitude": "L0",
+        "how": "Tanyakan: keputusan apa yang mau diambil, kapan, apa risikonya bila salah, dan siapa yang terdampak. Tulis jawabannya di Kanvas Scope.",
+        "output": "Business Problem & keputusan Sponsor"
+      },
+      {
+        "id": "slice",
+        "title": "Tetapkan batas vertical slice",
+        "altitude": "L0",
+        "how": "Isi hanya layer B-D-A-T yang relevan untuk keputusan ini. Layer yang tidak relevan boleh dikosongkan (fit-for-purpose).",
+        "output": "Batas slice di Kanvas Scope"
+      },
+      {
+        "id": "scope_doc",
+        "title": "Buat dokumen kerja dan minta persetujuan scope",
+        "altitude": "L0",
+        "how": "Buat satu dokumen di penyimpanan resmi (Word di SharePoint/OneDrive atau Google Docs) dari template. Bab 1 = scope. Kirim ke Sponsor untuk disetujui.",
+        "output": "Dokumen kerja (Deliverable)",
+        "artifact": {
+          "name": "Dokumen Kerja Arsitektur",
+          "type": "Deliverable",
+          "template": "dokumen-kerja"
+        }
+      }
+    ],
+    "sprout": [
+      {
+        "id": "baseline",
+        "title": "Kumpulkan baseline dari repository",
+        "altitude": "L0–L1",
+        "how": "Ambil peta capability L1/L2, katalog aplikasi, dan entitas data yang menyentuh slice. Catat apa yang belum ada sebagai gap.",
+        "output": "Bab Baseline di dokumen kerja"
+      },
+      {
+        "id": "pack",
+        "title": "Rakit dan serahkan Starter Pack",
+        "altitude": "L1",
+        "how": "Gabungkan baseline, prinsip terkait, standar notasi, dan template ke satu folder. Serahkan ke Delivery Team dan Domain Owner.",
+        "output": "Starter Pack",
+        "artifact": {
+          "name": "Starter Pack",
+          "type": "Lainnya"
+        }
+      }
+    ],
+    "cultivate": [
+      {
+        "id": "work",
+        "title": "Kerjakan analisis/rancangan sesuai mode",
+        "altitude": "L0–L1",
+        "how": "Co-Pilot: rancang bersama. Advisor: dampingi dan review. Gatekeeper: isi compliance checklist. Curator: susun rekomendasi fondasi.",
+        "output": "Bab Analisis di dokumen kerja"
+      },
+      {
+        "id": "review",
+        "title": "Alignment review",
+        "altitude": "L0",
+        "how": "Periksa hasil terhadap prinsip arsitektur dan metamodel BDAT. Catat temuannya di jurnal.",
+        "output": "Catatan review"
+      },
+      {
+        "id": "adr",
+        "title": "Ubah setiap pilihan penting menjadi ADR",
+        "altitude": "L0",
+        "how": "Satu ADR untuk satu keputusan: context, alternatif, rekomendasi. Minta Sponsor memutuskan.",
+        "output": "ADR Accepted/Rejected",
+        "adr": ""
+      }
+    ],
+    "harvest": [
+      {
+        "id": "signoff",
+        "title": "Minta sign-off dan tetapkan pemilik",
+        "altitude": "L0",
+        "how": "Pastikan setiap artefak final punya Owner pemeliharaan, lalu ubah statusnya menjadi Disahkan.",
+        "output": "Artefak berstatus Disahkan"
+      },
+      {
+        "id": "curate",
+        "title": "Kurasi ke Master EA Repository",
+        "altitude": "L1",
+        "how": "Samakan nama objek dengan katalog yang sudah ada. Simpan versi final ke repository resmi.",
+        "output": "Baseline diperbarui"
+      },
+      {
+        "id": "lessons",
+        "title": "Tulis lessons learned",
+        "altitude": "L0",
+        "how": "Apa yang perlu diperbaiki di cara kerja, template, atau standar? Masukkan ke backlog /foundation saat melewati gerbang.",
+        "output": "Item backlog /foundation"
+      }
+    ]
+  },
+  "seed_products": [
+    {
+      "id": "domain-data",
+      "name": "Rekomendasi Domain Data",
+      "sop_output": "O-S313-01",
+      "service": "Enterprise Support (C-level / Data Governance)",
+      "customer": "Sponsor tata kelola data, Data Governance Office",
+      "decision": "Menetapkan Domain & Sub-Domain Data beserta pemiliknya",
+      "when": "Merekomendasikan Domain dan Sub-Domain Data berbasis Proses Bisnis L1/L2, misalnya untuk kebutuhan Data Governance.",
+      "default_mode": 4,
+      "version": "0.1",
+      "maturity": "Draft",
+      "deliverable": "Rekomendasi Domain & Sub-Domain Data (D1–D8) + Executive Summary",
+      "tools": [
+        {
+          "name": "Template dokumen D1–D8",
+          "template": "rekomendasi-domain-data"
+        },
+        {
+          "name": "SIPOC per L2 + 7 filter business object",
+          "ref": "Data Domain Design, Modul 02"
+        },
+        {
+          "name": "CRUD Matrix proses × business object",
+          "ref": "Modul 03"
+        },
+        {
+          "name": "3 tes ketinggian (ganti aplikasi, reorganisasi, so-what)",
+          "ref": "README Data Domain Design"
+        }
+      ],
+      "ref": "Self Learning and Capability / Data Domain Design (Applied), Modul 01–08 (D1–D8)",
+      "stages": {
+        "seed": [
+          {
+            "id": "decision",
+            "title": "Kunci keputusan Sponsor",
+            "altitude": "L0",
+            "how": "Contoh: \"Menyetujui daftar Domain & Sub-Domain Data S3 beserta pemiliknya\". Tanyakan juga untuk apa hasilnya dipakai (Data Governance, MDM, BI) karena itu menentukan kedalaman.",
+            "output": "Keputusan di Kanvas Scope"
+          },
+          {
+            "id": "workdoc",
+            "title": "Buat dokumen kerja dari template",
+            "altitude": "L0",
+            "how": "Satu dokumen (Word/Docs) di penyimpanan resmi WIKA, bukan di repo belajar pribadi. Bab-babnya mengikuti D1–D8. Daftarkan link-nya di sini.",
+            "output": "Dokumen Rekomendasi Domain Data",
+            "artifact": {
+              "name": "Rekomendasi Domain & Sub-Domain Data",
+              "type": "Deliverable",
+              "template": "rekomendasi-domain-data"
+            }
+          }
+        ],
+        "cultivate": [
+          {
+            "id": "d1",
+            "title": "D1 · Sepakati prinsip & kriteria domain lebih dulu",
+            "altitude": "L0",
+            "how": "Sebelum menganalisis, minta Sponsor menyetujui kriteria: domain = batas tanggung jawab, nama merujuk ke benda yang dikelola (bukan unit organisasi), lolos tes ganti aplikasi dan tes reorganisasi. Catat sebagai ADR.",
+            "output": "ADR \"Kriteria Domain Data\" (Accepted)",
+            "ref": "Modul 01",
+            "adr": "Kriteria Domain Data untuk analisis domain"
+          },
+          {
+            "id": "d2",
+            "title": "D2 · Business Object Discovery",
+            "altitude": "L1",
+            "how": "Buat SIPOC per proses L2 → saring dengan 7 filter → normalisasi sinonim/homonim → tulis definisi singkat per objek.",
+            "output": "Bab D2 Business Object Catalog",
+            "ref": "Modul 02, Studi Kasus 02a"
+          },
+          {
+            "id": "d3",
+            "title": "D3 · CRUD Matrix proses × business object",
+            "altitude": "L1",
+            "how": "Tandai C/R/U/D per proses L2. Proses yang meng-Create adalah kandidat pemilik.",
+            "output": "Bab D3 CRUD Matrix",
+            "ref": "Modul 03"
+          },
+          {
+            "id": "d4",
+            "title": "D4–D5 · Clustering, batas, dan penamaan domain",
+            "altitude": "L0",
+            "how": "Kelompokkan objek berdasarkan pemilik C/U yang sama. Beri nama sesuai benda yang dikelola. Tulis satu Definition Sheet per domain: definisi, isi, pemilik, tingkat strategis. Uji dengan 3 tes ketinggian.",
+            "output": "Bab D4 Domain Map + D5 Definition Sheet",
+            "artifact": {
+              "name": "Data Domain Map (L0)",
+              "type": "Diagram"
+            },
+            "ref": "Modul 04"
+          },
+          {
+            "id": "d6",
+            "title": "D6–D7 · Fit-gap vs usulan Manajemen & uji pemekaran",
+            "altitude": "L0",
+            "how": "Bandingkan dengan usulan Manajemen memakai kriteria D1, bukan opini. Simulasikan bila probis L1 dimekarkan: apakah domainnya tetap stabil?",
+            "output": "Bab D6 Fit-Gap + D7 Stabilitas",
+            "ref": "Modul 05–06"
+          },
+          {
+            "id": "d8",
+            "title": "D8 · Keputusan terbuka → ADR untuk Sponsor",
+            "altitude": "L0",
+            "how": "Setiap keputusan terbuka menjadi satu ADR berisi opsi dan rekomendasi, lalu Sponsor yang memutuskan. Contoh: Data & Metadata menjadi domain enterprise atau sub-domain TI.",
+            "output": "ADR per keputusan terbuka",
+            "ref": "Modul 07",
+            "adr": ""
+          }
+        ],
+        "harvest": [
+          {
+            "id": "exec",
+            "title": "Ringkasan eksekutif & sign-off",
+            "altitude": "L0",
+            "how": "Buat 5–7 slide ringkasan untuk Sponsor (SCQA/Minto). Minta sign-off atas daftar domain beserta pemiliknya.",
+            "output": "Executive Summary",
+            "artifact": {
+              "name": "Executive Summary Domain Data",
+              "type": "Deliverable"
+            },
+            "ref": "Modul 08"
+          },
+          {
+            "id": "owner",
+            "title": "Tetapkan Data Owner per domain",
+            "altitude": "L0",
+            "how": "Setiap domain punya pemilik bernama (jabatan) yang setuju. Tanpa pemilik, domain belum boleh di-harvest (No Orphan).",
+            "output": "RACI Data per domain"
+          },
+          {
+            "id": "curate",
+            "title": "Masukkan Domain Map ke /foundation",
+            "altitude": "L0",
+            "how": "Domain Map yang disahkan menjadi bagian metamodel/klasifikasi data enterprise. Catat lessons learned untuk analisis domain L1 berikutnya.",
+            "output": "Item /foundation + baseline diperbarui"
+          }
+        ]
+      }
+    },
+    {
+      "id": "alignment-review",
+      "name": "Architecture Alignment Review",
+      "sop_output": "O-S313-04",
+      "service": "Development Support (proyek)",
+      "customer": "Delivery Team, Domain Owner",
+      "decision": "Menyetujui desain solusi atau dispensasi deviasi",
+      "when": "Desain solusi/pengadaan unit perlu dicek terhadap prinsip dan standar sebelum dibangun atau dibeli.",
+      "default_mode": 3,
+      "version": "0.1",
+      "maturity": "Draft",
+      "deliverable": "Rekaman Reviu Keselarasan + ADR deviasi",
+      "tools": [
+        {
+          "name": "Template dokumen kerja",
+          "template": "dokumen-kerja"
+        }
+      ],
+      "stages": {
+        "cultivate": [
+          {
+            "id": "collect",
+            "title": "Kumpulkan desain solusi",
+            "altitude": "L1",
+            "how": "Minta dari Delivery Team: konteks sistem, data yang dikelola (MRT, SoRec/SoRef), integrasi, dan platform.",
+            "output": "Bahan review"
+          },
+          {
+            "id": "check",
+            "title": "Isi Architecture Compliance Checklist",
+            "altitude": "L0–L1",
+            "how": "Periksa terhadap prinsip, metamodel BDAT, dan standar teknologi. Tandai setiap item: patuh, deviasi, atau tidak relevan.",
+            "output": "Rekaman Reviu Keselarasan",
+            "artifact": {
+              "name": "Rekaman Reviu Keselarasan",
+              "type": "Deliverable"
+            }
+          },
+          {
+            "id": "deviate",
+            "title": "Deviasi → ADR dengan mitigasi",
+            "altitude": "L0",
+            "how": "Setiap deviasi dibuat satu ADR berisi dampak, mitigasi, dan batas waktu. Sponsor yang memutuskan.",
+            "output": "ADR deviasi",
+            "adr": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "tech-assessment",
+      "name": "Asesmen Kelayakan Teknologi",
+      "sop_output": "O-S313-06",
+      "service": "Enterprise Support (C-level)",
+      "customer": "Sponsor pengadaan / Direksi",
+      "decision": "Mengadopsi, menunda, atau menolak teknologi baru",
+      "when": "Ada usulan platform/teknologi baru sebelum pengadaan.",
+      "default_mode": 2,
+      "version": "0.1",
+      "maturity": "Draft",
+      "deliverable": "Laporan Asesmen Kelayakan Teknologi",
+      "tools": [
+        {
+          "name": "Template dokumen kerja",
+          "template": "dokumen-kerja"
+        }
+      ],
+      "stages": {
+        "cultivate": [
+          {
+            "id": "abb",
+            "title": "Definisikan kebutuhan logis (ABB) sebelum produk (SBB)",
+            "altitude": "L0–L1",
+            "how": "Kapabilitas apa yang dibutuhkan, terlepas dari vendor? Baru setelah itu bandingkan produk.",
+            "output": "Daftar kebutuhan ABB",
+            "ref": "TOGAF Modul 05"
+          },
+          {
+            "id": "options",
+            "title": "Bandingkan opsi dengan kriteria yang sama",
+            "altitude": "L0",
+            "how": "Minimal 2 opsi + opsi 'tidak berbuat apa-apa': kecocokan kapabilitas, biaya total, risiko, dan kesesuaian standar.",
+            "output": "Matriks perbandingan",
+            "artifact": {
+              "name": "Laporan Asesmen Kelayakan Teknologi",
+              "type": "Deliverable"
+            }
+          },
+          {
+            "id": "adr",
+            "title": "Rekomendasi → ADR",
+            "altitude": "L0",
+            "how": "Satu ADR berisi rekomendasi adopsi dan konsekuensinya. Sponsor yang memutuskan.",
+            "output": "ADR Accepted/Rejected",
+            "adr": ""
+          }
+        ]
+      }
+    }
+  ],
+  "ea_services": [
+    "Enterprise Support (C-level)",
+    "Design Support (program)",
+    "Development Support (proyek)",
+    "Requirements Elicitation & Understanding",
+    "Architecture Planning (internal)",
+    "EA Practice Development (internal)"
+  ],
+  "altitudes": [
+    {
+      "id": "L0",
+      "name": "Strategis — siapa bertanggung jawab, keputusan apa"
+    },
+    {
+      "id": "L1",
+      "name": "Konseptual — benda bisnis apa dan artinya"
+    },
+    {
+      "id": "L0–L1",
+      "name": "Strategis–konseptual"
+    },
+    {
+      "id": "L2+",
+      "name": "Logis/fisik — parkir di catatan implementasi"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+[Unit]
+Description=EA Desk (POC) - manajemen kerja fungsi EA
+After=network.target
+
+[Service]
+# Production runs from the release worktree; data lives outside git.
+WorkingDirectory=/home/clouduser/Projects/ea-desk-release
+ExecStart=/home/clouduser/.local/bin/node server.js
+Environment=PORT=8090
+Environment=HOST=127.0.0.1
+Environment=DB_FILE=/home/clouduser/.local/share/ea-desk/poc/ea-desk.db
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target
